@@ -1,4 +1,4 @@
-x = 3
-y = 4
+x = 30
+y = 40
 
-print("{} + {} = {}", x, y, x+y)
+print("{} + {} = {}".format(x, y, x+y))

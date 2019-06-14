@@ -74,7 +74,7 @@ class PythonModule(Runnable):
     def run(self):
         try:
             _reload_module(self.module)
-            print("Successfully reloaded {} @ {}".format(self._modules, datetime.datetime.now()))
+            print("Successfully reloaded {} @ {}".format(self.module.__name__, datetime.datetime.now()))
         except:
             traceback.print_exc()
             pass
