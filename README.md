@@ -176,6 +176,11 @@ This will trigger `expensive_computation()` on the first run, and cache the
 result on the next reload. Why? Because `reload` doesn't flush the module's
 namespace. It still has access to everything that was there before! Which can be
 neat ...
+
+## Inspiration
+
+- Bruce Hauman's [Figwheel][6] revolutionized web development by hotloading new
+  code into a running JavaScript application. Thanks!
    
 ## References
 
@@ -204,3 +209,4 @@ neat ...
 [3]: http://man7.org/linux/man-pages/man7/inotify.7.html
 [4]: ./hotload.py
 [5]: ./docs/examples/post-reload-hook/
+[6]: https://figwheel.org/
