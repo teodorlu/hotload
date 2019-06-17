@@ -1,4 +1,4 @@
-# The Python: hotloaded
+# Python: hotloaded
 
 _Better than the prequel, I promise!_
 
