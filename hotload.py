@@ -82,8 +82,6 @@ class PythonModule(Runnable):
 
 
 class ClearTerminal(Runnable):
-    def __init__(self):
-        pass
     def run(self):
         os.system('cls' if os.name=='nt' else 'clear')
 
@@ -95,5 +93,10 @@ def runsteps(steps):
 
 def hotload(watch, steps):
     # TODO reload
+    runsteps(steps)
+    pass
+
+
+def hotload_single_iter(watch, steps):
     runsteps(steps)
 

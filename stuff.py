@@ -6,7 +6,7 @@ def sayhello(msg):
 
 # hotload.hotload(**runconf)
 # hotload.hotload(watch=["*"], steps=[1, 2])
-hotload.hotload(
+hotload.hotload_single_iter(
     watch=["*"],
     steps=[
         hotload.ClearTerminal(),
