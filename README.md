@@ -145,7 +145,7 @@ This allows you to let the your reloadable application code stay clean and nice,
 and you can provide different configurations for running different parts of your
 code.
 
-See the [post-reload-hook][5] example for detail!
+See the [post-reload-hook][5] example for more details!
 
 [5]: ./docs/examples/post-reload-hook/
 
