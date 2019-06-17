@@ -1,5 +1,12 @@
 # -*- mode: gitignore; -*-
 
+# Manual conf.
+#
+#  Create launch.py and lib.py here to test, without commiting
+
+/launch.py
+/lib.py
+
 ################################################################################
 # AUTOSTUFF
 

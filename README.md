@@ -1,4 +1,6 @@
-# Hotload your Python like there's no tomorrow!
+# Python: hotloaded
+
+<!-- Consider photoshopping in a matrix reloaded picture here! -->
 
 `hotload` enables exploratory programming with Python by providing a super-fast
 feedback loop and continuous program state. `hotload` differs from other
@@ -7,28 +9,64 @@ reloaders with its focus on
 - Minimal dependencies
 - Simple execution model.
 
-## Installation
+## Getting started with hotload
 
-1. Copy `hotload.py` from this repository into your project
-2. You're done!
+Hotload is distributed as a single file.
 
-## Usage
+1. Create `lib.py` and `load.py` in a new folder
+2. Copy [hotload.py][4] in there as well.
 
-With `hotload.py` in our working directory, we're going to need (a) our
-hotloading configuration and (b) the file we're going to work with. That leaves
-us with:
+[4]: ./hotload.py
 
-- `hotload.py` is just copied from here.
-- `load.py` is your configuration for hotload. Having this as a Python file
-  allows you to configure hotload to your liking.
-- `mylib.py` is the file you're working on. This is the file we're going to
-  hotload.
+Our task is to develop `lib.py`. We're going to do this by creating a really
+fast feedback loop, where saves trigger re-runs.
+
+```python
+# In lib.py
+
+x = 3
+y = 4
+
+print(x*x + y*y)
+```
+
+To hotload `lib.py`, we're going to use `load.py` as a load script. This
+script sets up and runs `hotload`. We'll use this start:
+
+```python
+# In launch.py
+
+import hotload
+
+hotload.hotload(
+    watch=[
+        hotload.listfiles(".", ext=".py")
+    ],
+    steps=[
+        hotload.ClearTerminal(),                               # (1) 
+        hotload.ReloadedPythonModule.from_module_name("lib"),  # (2)
+    ]
+)
+
+# (1) hotload.ClearTerminal() ensures a "dashboard"-like experience when we work, so
+#     that the terminal doesn't keep scrolling down.
+
+# (2) then we set up a reloaded python module.
+```
+
+Now, use it! Run the launch script with
+
+```
+$ python launch.py
+```
+
+... and edit lib.py and save! You should trigger a reload each time you save.
 
 ## Supported platforms
 
-`hotload` avoids external dependencies (other than the Python library), and aims
-to be portable. Why support Python 2? Because it's when interacting with old,
-slow systems hotloading really shines.
+`hotload` avoids external dependencies, and aims to be portable. Why support
+Python 2? Because it's when interacting with old, stale systems with poor
+documentation that hotloading really shines.
 
 `hotload` has been tested on the following systems:
 
@@ -38,7 +76,11 @@ slow systems hotloading really shines.
 - Anaconda Python 2.7.15 on Windows 10
 - Abaqus Python 2.7.4
 
-## Exceptions and interrupts
+## Advanced usage
+
+You might want to have a look here after getting a feel for the reloading.
+
+### Exceptions and interrupts
 
 The balance between liveness and security is fragile. Thus, it's recommended to
 understand the exception model of hotload.
@@ -47,7 +89,91 @@ understand the exception model of hotload.
 2. For all other exceptions, the stacktrace is printed and the reload loop
    continues.
 
-## Other things you might interested in
+### Why doesn't the modules i use _from_ lib reload?
+
+The following setup won't reload `mymath.py`:
+
+```python
+# in lib.py
+
+import mymath
+
+print(mymath.f(1,2))
+```
+
+```python
+# in mymath.py
+
+def f(x):
+    return x*x + y*y
+```
+
+To trigger reloads in `mymath.py` from the `lib.py` entry point, we need a
+manual reload. Reloading differs between Python 2 and 3.
+
+```python
+# In lib.py, Python 3
+
+from importlib import reload
+
+import mymath
+reload(mymath)
+
+print(mymath.f(2,3))
+```
+
+A design note. The first version of this library tried to infer what modules it
+would have to reload. It maintained a list of all the modules it had previously
+reloaded, and watched those for files. Lots of automation. Lots of complexity.
+In the end, I didn't find it useful at all. Instead, I add in reloads in the
+modules I'm developing at the top like this. The advantage? It's all dynamic --
+I don't have to restart `hotload` -- it can just keep on runnning. If you've
+chosen to watch a folder, each file change will trigger a reload to the
+top-level entry point.
+
+### Calling a specific function in a module after reload
+
+Just developing modules by having a reload "be your test" works fine for small
+modules, and is quite nice to work with. However, I've found it problematic for
+larger systems. Then I'd like to create an init function in the bottom of the
+file instead, and call the init function from hotload.
+
+To use this, you can extend `hotload.ReloadedPythonModule` and override
+`pre_reload_hook` (for cleanup) or `post_reload_hook` (for initialization).
+
+To do this, we can use the `post_reload_hook` in ReloadedPythonModule.
+
+### How do I persist state across reloads?
+
+Usage cases:
+
+- Keep a connection to an external system open under reloads
+- Avoid having to re-run time-consuming external calls on each reload
+
+You can use NameError to trigger the computation in the first place:
+
+```python
+# in mymath.py
+
+import time
+
+def expensive_computation():
+    # ...
+    time.sleep(5)
+    42
+
+try:
+    constant = constant
+except NameError:
+    constant = expensive_computation
+```
+
+This will trigger `expensive_computation()` on the first run, and cache the
+result on the next reload. Why? Because `reload` doesn't flush the module's
+namespace. It still has access to everything that was there before! Which can be
+neat ...
+   
+## References
 
 - [entr][1] provides this workflow as a command-line, language-agnostic tool. I
   use entr all the time on linux. Limitations: you have to hop out of your
