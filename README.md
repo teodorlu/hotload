@@ -16,8 +16,6 @@ Hotload is distributed as a single file.
 1. Create `lib.py` and `load.py` in a new folder
 2. Copy [hotload.py][4] in there as well.
 
-[4]: ./hotload.py
-
 Our task is to develop `lib.py`. We're going to do this by creating a really
 fast feedback loop, where saves trigger re-runs.
 
@@ -149,8 +147,6 @@ code.
 
 See the [post-reload-hook][5] example for more details!
 
-[5]: ./docs/examples/post-reload-hook/
-
 ### How do I persist state across reloads?
 
 Usage cases:
@@ -193,9 +189,6 @@ neat ...
   and see a new (and greener) list of all the tests that fail and pass!
 - Other Python reloaders like [hoh/reloadr][2].
 
-[1]: http://eradman.com/entrproject/
-[2]: https://github.com/hoh/reloadr
-
 ## FAQ
 
 - **Q**: Does hotload use polling?
@@ -206,4 +199,8 @@ neat ...
   Search for existing Python libraries! Note that these are going to be more
   complex than hotload.
   
+[1]: http://eradman.com/entrproject/
+[2]: https://github.com/hoh/reloadr
 [3]: http://man7.org/linux/man-pages/man7/inotify.7.html
+[4]: ./hotload.py
+[5]: ./docs/examples/post-reload-hook/
