@@ -182,7 +182,7 @@ neat ...
 ## Inspiration
 
 - Bruce Hauman's [Figwheel][6] revolutionized web development by hotloading new
-  code into a running JavaScript application. Thanks!
+  code into a running JavaScript environment. Thanks!
    
 ## References
 
