@@ -89,7 +89,7 @@ understand the exception model of hotload.
 2. For all other exceptions, the stacktrace is printed and the reload loop
    continues.
 
-### Why doesn't the modules i use _from_ lib reload?
+### Why aren't recursive dependencies reloaded?
 
 The following setup won't reload `mymath.py`:
 
