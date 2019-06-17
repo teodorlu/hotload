@@ -11,6 +11,10 @@ from pprint import pprint
 from types import ModuleType
 
 
+################################################################################
+# UTILITY FUNCTIONS
+
+
 def _reload_module(module):
     """Reload a module from Python 2 or 3"""
     try:
@@ -29,10 +33,17 @@ def _listfiles(folder, ext=""):
         )
     return fs
 
+
 ################################################################################
-# API OUTLINE
+# RUNNABLE
 #
-#  - Create functions that implement the runnable interface
+# Runnables can be run. That's it! A few runnables are included for running
+# some compile-time Python, running a system command, running a dynamically
+# reloaded Python module.
+#
+# Consideration: should I ensure that I can pass state between reloads? Or
+# should I handle that internally? Perhaps simplest just to handle locally.
+
 
 class Runnable(object):
     @abstractmethod
