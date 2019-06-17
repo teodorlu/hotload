@@ -141,7 +141,9 @@ file instead, and call the init function from hotload.
 To use this, you can extend `hotload.ReloadedPythonModule` and override
 `pre_reload_hook` (for cleanup) or `post_reload_hook` (for initialization).
 
-To do this, we can use the `post_reload_hook` in ReloadedPythonModule.
+This allows you to let the your reloadable application code stay clean and nice,
+and you can provide different configurations for running different parts of your
+code.
 
 ### How do I persist state across reloads?
 
