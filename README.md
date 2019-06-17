@@ -38,6 +38,15 @@ slow systems hotloading really shines.
 - Anaconda Python 2.7.15 on Windows 10
 - Abaqus Python 2.7.4
 
+## Exceptions and interrupts
+
+The balance between liveness and security is fragile. Thus, it's recommended to
+understand the exception model of hotload.
+
+1. `C-c` (Control-c) interrupts the reload loop
+2. For all other exceptions, the stacktrace is printed and the reload loop
+   continues.
+
 ## Other things you might interested in
 
 - [entr][1] provides this workflow as a command-line, language-agnostic tool. I
@@ -52,3 +61,15 @@ slow systems hotloading really shines.
 
 [1]: http://eradman.com/entrproject/
 [2]: https://github.com/hoh/reloadr
+
+## FAQ
+
+- **Q**: Does hotload use polling?
+- **A**: Yes. That means it asks the OS whether all watched files have changed
+  each iteration (by default 144 iterations per second). Using polling is
+  simple, and works across systems. If you need lower response times or less
+  system load, you might want to use something like [inotify][3] on Linux.
+  Search for existing Python libraries! Note that these are going to be more
+  complex than hotload.
+  
+[3]: http://man7.org/linux/man-pages/man7/inotify.7.html

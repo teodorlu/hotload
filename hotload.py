@@ -24,7 +24,25 @@ def _reload_module(module):
         reload(module)
 
 
-def _listfiles(folder, ext=""):
+def _file_changed(f):
+    """Read os metadata for last modification of file at `f`
+
+    Tested on Unix and Windows. More details in the standard library[1].
+
+    [1]: https://docs.python.org/3/library/stat.html#stat.ST_CTIME
+
+    """
+    return os.stat(f).st_mtime
+
+
+def _all_file_changes(filepaths):
+    return {
+        path: _file_changed(path)
+        for path in filepaths
+    }
+
+
+def listfiles(folder, ext=""):
     fs = list()
     for root, dirs, files in os.walk(folder):
         fs.extend(
@@ -83,12 +101,8 @@ class PythonModule(Runnable):
         return PythonModule(module)
 
     def run(self):
-        try:
-            _reload_module(self.module)
-            print("Successfully reloaded {} @ {}".format(self.module.__name__, datetime.datetime.now()))
-        except:
-            traceback.print_exc()
-            pass
+        _reload_module(self.module)
+        print("Successfully reloaded {} @ {}".format(self.module.__name__, datetime.datetime.now()))
     pass
 
 
@@ -97,17 +111,45 @@ class ClearTerminal(Runnable):
         os.system('cls' if os.name=='nt' else 'clear')
 
 
-def runsteps(steps):
+def hotload(watch, steps, waittime_ms=1.0/144):
+    """Hotload that code!"""
+
+    # Avoid duplicates in the recurring check
+    watchfiles = set()
+    for targets in watch:
+        for path in targets:
+            watchfiles.add(path)
+
+    # Take note of when files were last changed before we start reloading
+    last_changed = _all_file_changes(watchfiles)
     for step in steps:
-        step.run()
+        try:
+            step.run()
+        except KeyboardInterrupt:
+            print("Interrupt received, stopping hotload")
+            return
+        except:
+            print("Error running {}".format(step))
+            traceback.print_exc()
 
-
-def hotload(watch, steps):
-    # TODO reload
-    runsteps(steps)
+    # Begin the loop! Each Runner is responsible for handling its own exceptions.
+    while True:
+        new_changed = _all_file_changes(watchfiles)
+        if last_changed == new_changed:
+            time.sleep(waittime_ms)
+        else:
+            last_changed = new_changed
+            try:
+                for step in steps:
+                    try:
+                        step.run()
+                    except KeyboardInterrupt:
+                        raise
+                    except:
+                        print("Error running {}".format(step))
+                        traceback.print_exc()
+            except KeyboardInterrupt:
+                print("Interrupt received, stopping hotload")
+                return
+            pass
     pass
-
-
-def hotload_single_iter(watch, steps):
-    runsteps(steps)
-

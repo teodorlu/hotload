@@ -6,8 +6,10 @@ def sayhello(msg):
 
 # hotload.hotload(**runconf)
 # hotload.hotload(watch=["*"], steps=[1, 2])
-hotload.hotload_single_iter(
-    watch=["*"],
+hotload.hotload(
+    watch=[
+        hotload.listfiles(".", ext=".py")
+    ],
     steps=[
         hotload.ClearTerminal(),
         hotload.Command("echo Hello from step 1"),
