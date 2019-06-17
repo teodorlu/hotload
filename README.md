@@ -1,4 +1,6 @@
-# Python: hotloaded
+# The Python: hotloaded
+
+_Better than the prequel, I promise!_
 
 <!-- Consider photoshopping in a matrix reloaded picture here! -->
 
