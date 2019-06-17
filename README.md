@@ -78,7 +78,9 @@ documentation that hotloading really shines.
 
 ## Advanced usage
 
-You might want to have a look here after getting a feel for the reloading.
+Did you get the reloaded experience? Good! Would you like some more? Then,
+please read on! This is going to cover some limitations with naïve reloading,
+and how we can overcome them.
 
 ### Exceptions and interrupts
 
