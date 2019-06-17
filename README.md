@@ -190,10 +190,10 @@ neat ...
   use entr all the time on linux. Limitations: you have to hop out of your
   Python context, and you'll have to install it on a target environment which
   supports it.
-- Test runners for Python. Some test runners provide autotest functionality.
-  They build in file watching like what I've used here, and can automatically
-  provide you with test output as you develop your application. Just hit save,
-  and see a new (and greener) list of all the tests that fail and pass!
+- Test runners for Python. You can use hotload with a test runner, and have your
+  `lib.py` run the test runner, thereby avoid having to restart the Python
+  interpreter. Or you might have a test runner with a built in reloader; in
+  which case you might not need this.
 - Other Python reloaders like [hoh/reloadr][2].
 
 ## FAQ
