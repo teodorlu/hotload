@@ -60,7 +60,7 @@ Now, use it! Run the launch script with
 $ python launch.py
 ```
 
-... and edit lib.py and save! You should trigger a reload each time you save.
+... and edit lib.py and save! Each save triggers a new reload.
 
 ## Supported platforms
 
