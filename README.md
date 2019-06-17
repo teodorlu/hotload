@@ -159,7 +159,7 @@ Usage cases:
 You can use NameError to trigger the computation in the first place:
 
 ```python
-# in mymath.py
+# in lib.py
 
 import time
 
