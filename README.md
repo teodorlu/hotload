@@ -7,7 +7,7 @@ feedback loop and continuous program state. `hotload` differs from other
 reloaders with its focus on
 
 - Minimal dependencies
-- Simple execution model.
+- Simple execution model (< 200 lines).
 
 ## Getting started with hotload
 
