@@ -171,7 +171,7 @@ def expensive_computation():
 try:
     constant = constant
 except NameError:
-    constant = expensive_computation
+    constant = expensive_computation()
 ```
 
 This will trigger `expensive_computation()` on the first run, and cache the
