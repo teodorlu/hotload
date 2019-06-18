@@ -74,7 +74,7 @@ documentation that hotloading really shines.
 - Anaconda Python 3.7.3 on Ubuntu 18.04
 - Anaconda Python 3.7.3 on Windows 10
 - Anaconda Python 2.7.15 on Windows 10
-- Abaqus Python 2.7.4
+- Abaqus Python 2.7.4 on Windows 10
 
 ## Advanced usage
 
