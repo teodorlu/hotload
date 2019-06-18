@@ -194,7 +194,7 @@ hotload.py --watch . --clear-terminal --hotload script --run echo "That's a relo
 
 Why not start with the CLI? Because I don't want the CLI to be the only entry
 point. When you can just start things from code, and have a well documented code
-entry, the system is extensible. And we don't _need** to control the
+entry, the system is extensible. And we don't need to control the
 initialization.
 
 But a CLI will probably be useful!
