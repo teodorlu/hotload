@@ -203,6 +203,10 @@ But a CLI will probably be useful!
 could interact with a hotloaded Python REPL that (at all times) is aware of our
 code.
 
+**Tests** might be nice. To be able to ensure that there's no primitive errors
+across platforms. Challenge: hotload typically operates on the "outer" layer of
+a code base, so we'd have to build an outer-outer layer.
+
 ## References
 
 - [entr][1] provides this workflow as a command-line, language-agnostic tool. I
