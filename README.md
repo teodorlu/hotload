@@ -199,7 +199,8 @@ initialization.
 
 But a CLI will probably be useful!
 
-Another question: _Should the app list its own files, or accept them in stdin?_
+Another question: _Should the app take parameters to determine which files to
+watch, or expect a list of files on stdin?_
 
 **It might be useful to run hotload in the background**. Why? Because then we
 could interact with a hotloaded Python REPL that (at all times) is aware of our
