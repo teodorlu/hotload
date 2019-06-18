@@ -166,7 +166,7 @@ import time
 def expensive_computation():
     # ...
     time.sleep(5)
-    42
+    return 42
 
 try:
     constant = constant
