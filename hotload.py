@@ -129,16 +129,7 @@ def hotload(watch, steps, waittime_ms=1.0/144):
             watchfiles.add(path)
 
     # Take note of when files were last changed before we start reloading
-    last_changed = _all_file_changes(watchfiles)
-    for step in steps:
-        try:
-            step.run()
-        except KeyboardInterrupt:
-            print("Interrupt received, stopping hotload")
-            return
-        except:
-            print("Error running {}".format(step))
-            traceback.print_exc()
+    last_changed = None
 
     # Begin the loop! Each Runner is responsible for handling its own exceptions.
     while True:
