@@ -189,7 +189,7 @@ neat ...
 **Hotload might need a command line interface**. Here's an early draft:
 
 ```
-hotload.py --watch . --clear-terminal --hotload script --run echo "That's a reload!"
+find . | grep ".py" | hotload.py --clear-terminal --hotload script --run echo "That's a reload!"
 ```
 
 Why not start with the CLI? Because I don't want the CLI to be the only entry
@@ -213,7 +213,7 @@ a code base, so we'd have to build an outer-outer layer.
 ## References
 
 - [entr][1] provides this workflow as a command-line, language-agnostic tool. I
-  use entr all the time on linux. Limitations: you have to hop out of your
+  use entr all the time on Linux. Limitations: you have to hop out of your
   Python context, and you'll have to install it on a target environment which
   supports it.
 - Test runners for Python. You can use hotload with a test runner, and have your
