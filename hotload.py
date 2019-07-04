@@ -87,7 +87,7 @@ class Command(Runnable):
 
 
 class ReloadedPythonModule(Runnable):
-    def __init__(self, module, post_reload_hook=None):
+    def __init__(self, module):
         assert isinstance(module, ModuleType), (
             "ReloadedPythonModule requires a module handle as input."
             "Use ReloadedPythonModule.from_module_name to construct a PythonModule from"
