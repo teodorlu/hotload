@@ -11,9 +11,30 @@ reloaders with its focus on
 - Minimal dependencies
 - Simple execution model (< 200 lines).
 
-## Getting started with hotload
+## Quick start with CLI
 
-Hotload is distributed as a single file.
+With the CLI, you'll be running hotload as a binary script. This is nice for
+testing small things, and works as an alternative to calling `python` manually
+on the command line each time you want to run the script.
+
+1. Install the script. Download `hotload.py` manually and make it executable, or
+   use this one-liner:
+
+        curl https://raw.githubusercontent.com/teodorlu/hotload/master/install.sh | bash
+
+2. Ensure that you have `~/.local/bin` on your path.
+
+3. Create `hello.py`, and try `echo hello.py | hotload hello.py`
+
+Make some changes to `hello.py`. Can you see it change?
+
+## Using the Python API
+
+With the Python API, you'll have more flexibility in how you run Hotload. You
+may configure what files should be watched, whether you want the screen to
+refresh, and you may load multiple modules.
+
+Hotload is distributed as a single file
 
 1. Create `lib.py` and `load.py` in a new folder
 2. Copy [hotload.py][4] in there as well.
