@@ -168,11 +168,17 @@ Example usage:
 
 Extension for Python script is optional.
 """
+    print("Running hotload ...")
     sys.path.append(".")
 
     if len(sys.argv) != 2:
         print(USAGE)
         sys.exit(1)
+
+    print("Nothing happening? Remember to pass watch files on stdin.")
+    print("Example: ls *py | hotload hello.py")
+    print()
+    print("  ls *py | hotload hello.py")
 
     watchfiles = [f.strip() for f in sys.stdin.readlines()]
 
