@@ -1,8 +1,12 @@
+#!/usr/bin/env python3
+
 from __future__ import print_function
 
 import datetime
 import importlib
 import os
+import re
+import sys
 import time
 import traceback
 
@@ -152,3 +156,40 @@ def hotload(watch, steps, waittime_ms=1.0/144):
                 return
             pass
     pass
+
+
+def main():
+    USAGE="""Usage: hotload SCRIPT
+Hotload python script when files on standard input change
+
+Example usage:
+
+    find . -name '*.py' | hotload init.py
+
+Extension for Python script is optional.
+"""
+    sys.path.append(".")
+
+    if len(sys.argv) != 2:
+        print(USAGE)
+        sys.exit(1)
+
+    init_module = re.sub(r"\.py", "", sys.argv[1])
+
+    conf = {
+        "watch": [
+            [f.strip() for f in sys.stdin.readlines()]
+        ],
+        "steps": [
+            ClearTerminal(),
+            ReloadedPythonModule.from_module_name(init_module)
+        ]
+    }
+
+    hotload(**conf)
+
+    pass
+
+
+if __name__ == "__main__":
+    main()
