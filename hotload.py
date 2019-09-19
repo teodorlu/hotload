@@ -191,7 +191,7 @@ Extension for Python script is optional.
 
     conf = {
         "watch": [
-            [f.strip() for f in sys.stdin.readlines()]
+            watchfiles
         ],
         "steps": [
             ClearTerminal(),
