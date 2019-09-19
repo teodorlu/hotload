@@ -11,7 +11,9 @@ reloaders with its focus on
 - Minimal dependencies
 - Simple execution model (< 200 lines).
 
-## Quick start with CLI
+## Quick start with CLI (Linux / Mac)
+
+Windows users: you'll currently have to use the Python API (next section). Sorry for that!
 
 With the CLI, you'll be running hotload as a binary script. This is nice for
 testing small things, and works as an alternative to calling `python` manually
