@@ -8,8 +8,8 @@ _Better than the prequel, I promise!_
 feedback loop and continuous program state. `hotload` differs from other
 reloaders with its focus on
 
-- Minimal dependencies
-- Simple execution model (< 200 lines).
+- No dependencies other than Python 2/3.
+- Simple: at ~200 lines, you can read it in a few minutes.
 
 ## Quick start with CLI (Linux / Mac)
 
