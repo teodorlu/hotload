@@ -174,6 +174,13 @@ Extension for Python script is optional.
         print(USAGE)
         sys.exit(1)
 
+    watchfiles = [f.strip() for f in sys.stdin.readlines()]
+
+    if not watchfiles:
+        print("Error: no watch files specified.")
+        print(USAGE)
+        sys.exit(1)
+
     init_module = re.sub(r"\.py", "", sys.argv[1])
 
     conf = {
