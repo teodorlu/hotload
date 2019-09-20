@@ -1,5 +1,6 @@
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+#!/bin/bash
+DIR="$(git rev-parse --show-toplevel)"
 mkdir -p ~/.local/bin
-rm -r ~/.local/bin/hotload
+rm -f ~/.local/bin/hotload
 cp "$DIR/hotload.py" ~/.local/bin/hotload
 chmod +x ~/.local/bin/hotload
