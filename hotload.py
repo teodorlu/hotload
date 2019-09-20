@@ -15,6 +15,10 @@ from pprint import pprint
 from types import ModuleType
 
 
+# Turn on to see how long each reload takes.
+TIME_RELOADS = False
+
+
 ################################################################################
 # UTILITY FUNCTIONS
 
@@ -141,6 +145,7 @@ def hotload(watch, steps, waittime_ms=1.0/144):
         if last_changed == new_changed:
             time.sleep(waittime_ms)
         else:
+            reload_begin_ms = time.time() * 1000
             last_changed = new_changed
             try:
                 for step in steps:
@@ -154,6 +159,9 @@ def hotload(watch, steps, waittime_ms=1.0/144):
             except KeyboardInterrupt:
                 print("Interrupt received, stopping hotload")
                 return
+            reload_done_ms = time.time() * 1000
+            if TIME_RELOADS:
+                print(f"Reloaded in {reload_done_ms - reload_begin_ms} ms")
             pass
     pass
 
