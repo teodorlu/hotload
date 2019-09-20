@@ -5,11 +5,34 @@ _Better than the prequel, I promise!_
 <!-- Consider photoshopping in a matrix reloaded picture here! -->
 
 `hotload` enables exploratory programming with Python by providing a super-fast
-feedback loop and continuous program state. `hotload` differs from other
-reloaders with its focus on
+feedback loop and continuous program state.
+
+## Why hotload?
+
+Hotload lets you reload a single file, rather than rerunning your application.
+That really makes a difference when your dependencies are heavy. When I'm
+testing this script:
+
+```python
+# In script_with_deps.py
+
+import numpy as np
+import pandas as pd
+import altair as alt
+import psycopg2
+
+print("Done!")
+```
+
+`python script_with_deps.py` completes in 480 ms, whereas a `hotload` reload
+completes in 4 ms. For big projects, this can allow you to stay in-process and
+test your changes continuously. In addition, you don't have to switch out to a
+terminal, a single control+s in the file you're developing is enough.
+
+`hotload` is simple:
 
 - No dependencies other than Python 2/3.
-- Simple: at ~200 lines, you can read it in a few minutes.
+- Small: at ~200 lines, you can read it in a few minutes.
 
 ## Quick start with CLI (Linux / Mac)
 
@@ -224,8 +247,11 @@ code.
 across platforms. Challenge: hotload typically operates on the "outer" layer of
 a code base, so we'd have to build an outer-outer layer.
 
-## References
+## Other options
 
+- [Jupyter Notebooks][7] enable a similar workflow, where you import your
+  dependencies _once_ and stay in-process afterwards. Notebooks are a good
+  option when you don't want to consider your script as a whole.
 - [entr][1] provides this workflow as a command-line, language-agnostic tool. I
   use entr all the time on Linux. Limitations: you have to hop out of your
   Python context, and you'll have to install it on a target environment which
@@ -252,3 +278,4 @@ a code base, so we'd have to build an outer-outer layer.
 [4]: ./hotload.py
 [5]: ./docs/examples/post-reload-hook/
 [6]: https://figwheel.org/
+[7]: https://jupyterlab.readthedocs.io/en/stable/
