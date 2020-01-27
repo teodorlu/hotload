@@ -116,11 +116,16 @@ documentation that hotloading really shines.
 
 `hotload` has been tested on the following systems:
 
+- Source-built Python 3.8.1 on Ubuntu 18.04
 - system-installed Python 3.7.3 on Ubuntu 18.04
 - Anaconda Python 3.7.3 on Ubuntu 18.04
 - Anaconda Python 3.7.3 on Windows 10
 - Anaconda Python 2.7.15 on Windows 10
 - Abaqus Python 2.7.4 on Windows 10
+
+If any of these platforms break, please report the bug in an issue. If you're on
+a different platform and something breaks, please consider making a feature
+request in an issue.
 
 ## Advanced usage
 
