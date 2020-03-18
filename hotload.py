@@ -174,7 +174,7 @@ Example usage:
 
     find . -name '*.py' | hotload init.py
 
-Extension for Python script is optional.
+.py extension for script may be omitted.
 """
     print("Running hotload ...")
     sys.path.append(".")
