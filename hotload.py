@@ -201,6 +201,8 @@ Example usage:
 
     init_module = re.sub(r"\.py", "", sys.argv[1])
 
+    os.environ["HOTLOAD_RUNNING"] = "HOTLOAD_RUNNING"
+
     conf = {
         "watch": [watchfiles],
         "steps": [ClearTerminal(), ReloadedPythonModule.from_module_name(init_module)],
