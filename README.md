@@ -25,7 +25,7 @@ print("Done!")
 ```
 
 `python script_with_deps.py` completes in 480 ms, whereas a `hotload` reload
-completes in 4 ms. For big projects, this can allow you to stay in-process and
+completes in 4 ms. For big projects, this can allow you to stay focused, and
 test your changes continuously. In addition, you don't have to switch out to a
 terminal, a single control+s in the file you're developing is enough.
 
