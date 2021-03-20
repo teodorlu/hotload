@@ -44,19 +44,13 @@ def _file_changed(f):
 
 
 def _all_file_changes(filepaths):
-    return {
-        path: _file_changed(path)
-        for path in filepaths
-    }
+    return {path: _file_changed(path) for path in filepaths}
 
 
 def listfiles(folder, ext=""):
     fs = list()
     for root, dirs, files in os.walk(folder):
-        fs.extend(
-            os.path.join(root, f) for f in files
-            if f.endswith(ext)
-        )
+        fs.extend(os.path.join(root, f) for f in files if f.endswith(ext))
     return fs
 
 
@@ -75,22 +69,27 @@ class Runnable(object):
     @abstractmethod
     def run(self):
         pass
+
     pass
 
 
 class PythonHandle(Runnable):
     def __init__(self, code):
         self.code = code
+
     def run(self):
         self.code()
+
     pass
 
 
 class Command(Runnable):
     def __init__(self, command):
         self.command = command
+
     def run(self):
         os.system(self.command)
+
     pass
 
 
@@ -118,16 +117,21 @@ class ReloadedPythonModule(Runnable):
         self.pre_reload_hook(self.module)
         _reload_module(self.module)
         self.post_reload_hook(self.module)
-        print("Successfully reloaded {} @ {}".format(self.module.__name__, datetime.datetime.now()))
+        print(
+            "Successfully reloaded {} @ {}".format(
+                self.module.__name__, datetime.datetime.now()
+            )
+        )
+
     pass
 
 
 class ClearTerminal(Runnable):
     def run(self):
-        os.system('cls' if os.name=='nt' else 'clear')
+        os.system("cls" if os.name == "nt" else "clear")
 
 
-def hotload(watch, steps, waittime_ms=1.0/144):
+def hotload(watch, steps, waittime_ms=1.0 / 144):
     """Hotload that code!"""
 
     # Avoid duplicates in the recurring check
@@ -167,7 +171,7 @@ def hotload(watch, steps, waittime_ms=1.0/144):
 
 
 def main():
-    USAGE="""Usage: hotload SCRIPT
+    USAGE = """Usage: hotload SCRIPT
 Hotload python script when files on standard input change
 
 Example usage:
@@ -198,13 +202,8 @@ Example usage:
     init_module = re.sub(r"\.py", "", sys.argv[1])
 
     conf = {
-        "watch": [
-            watchfiles
-        ],
-        "steps": [
-            ClearTerminal(),
-            ReloadedPythonModule.from_module_name(init_module)
-        ]
+        "watch": [watchfiles],
+        "steps": [ClearTerminal(), ReloadedPythonModule.from_module_name(init_module)],
     }
 
     hotload(**conf)
