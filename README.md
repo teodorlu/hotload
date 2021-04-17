@@ -1,8 +1,4 @@
-# Python: hotloaded
-
-_Better than the prequel, I promise!_
-
-<!-- Consider photoshopping in a matrix reloaded picture here! -->
+# Hotload your Python
 
 `hotload` enables exploratory programming with Python by providing a super-fast
 feedback loop and continuous program state.
@@ -14,7 +10,7 @@ That really makes a difference when your dependencies are heavy. When I'm
 testing this script:
 
 ```python
-# In script_with_deps.py
+# script_with_deps.py
 
 import numpy as np
 import pandas as pd
