@@ -131,7 +131,7 @@ and how we can overcome them.
 
 ### Exceptions and interrupts
 
-The balance between liveness and security is fragile. Thus, it's recommended to
+The balance between liveness and reliability is important. Therefore, it's recommended to
 understand the exception model of hotload.
 
 1. `C-c` (Control-c) interrupts the reload loop
