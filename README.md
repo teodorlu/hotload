@@ -125,8 +125,8 @@ documentation that hotloading really shines.
 - Abaqus Python 2.7.4 on Windows 10
 
 If any of these platforms break, please report the bug in an issue. If you're on
-a different platform and something breaks, please consider making a feature
-request in an issue.
+a different platform where you think hotload should work, please create an
+issue.
 
 ## Advanced usage
 
