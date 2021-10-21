@@ -49,7 +49,12 @@ on the command line each time you want to run the script.
 
 Make some changes to `hello.py`. Can you see it change?
 
-## Using the Python API
+Note: Windows support for the CLI would be nice, but I rarely (never) use the
+Windows command line to run scripts. If you're using Windows Susbsystem for
+Linux, the install instructions should work just fine from a bash shell. Ideas /
+discussion / PRs for proper Windows CLI support is interesting, though.
+
+## Using the Python API (Linux / Mac / Windows)
 
 With the Python API, you'll have more flexibility in how you run Hotload. You
 may configure what files should be watched, whether you want the screen to
