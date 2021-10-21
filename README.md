@@ -245,6 +245,9 @@ it's quite limited. We could try to go for multiple arguments:
 find . | grep ".py" | hotload.py --clear-terminal --hotload script --run echo "That's a reload!"
 ```
 
+Message from 2021-10-21 - I've never really felt the need for a more complex
+CLI. So that's perhaps over engineering.
+
 **It might be useful to run hotload in the background**. Why? Because then we
 could interact with a hotloaded Python REPL that (at all times) is aware of our
 code.
