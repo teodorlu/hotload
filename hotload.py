@@ -12,7 +12,7 @@ import traceback
 
 from abc import abstractmethod
 from pprint import pprint
-from types import ModuleType
+from types import FunctionType, ModuleType
 
 
 # Turn on to see how long each reload takes.
@@ -123,6 +123,11 @@ class ReloadedPythonModule(Runnable):
             )
         )
 
+    def function(self, function_name):
+        function = self.module.__dict__[function_name]
+        assert isinstance(function, FunctionType)
+        return function
+
     pass
 
 
@@ -183,9 +188,22 @@ Example usage:
     print("Running hotload ...")
     sys.path.append(".")
 
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print(USAGE)
         sys.exit(1)
+
+    entrypoint = None
+
+    for i, cliarg in enumerate(sys.argv):
+        # Look for CLI options
+        if i < 2:
+            # Must be "hotload" and "script"
+            continue
+        if cliarg == "--entrypoint":
+            try:
+                entrypoint = sys.argv[i + 1]
+            except IndexError:
+                print("LOL")
 
     print("Nothing happening? Remember to pass watch files on stdin.")
     print("Example: ls *py | hotload hello.py")
@@ -203,9 +221,13 @@ Example usage:
 
     os.environ["HOTLOAD_RUNNING"] = "HOTLOAD_RUNNING"
 
+    reloaded_module = ReloadedPythonModule.from_module_name(init_module)
+    if entrypoint:
+        reloaded_module.post_reload_hook = lambda _: reloaded_module.function(entrypoint)()
+
     conf = {
         "watch": [watchfiles],
-        "steps": [ClearTerminal(), ReloadedPythonModule.from_module_name(init_module)],
+        "steps": [ClearTerminal(), reloaded_module],
     }
 
     hotload(**conf)
