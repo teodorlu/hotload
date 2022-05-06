@@ -285,6 +285,6 @@ a code base, so we'd have to build an outer-outer layer.
 [2]: https://github.com/hoh/reloadr
 [3]: http://man7.org/linux/man-pages/man7/inotify.7.html
 [4]: ./hotload.py
-[5]: ./docs/examples/post-reload-hook/
+[5]: ./docs/example-post-reload-hook/
 [6]: https://figwheel.org/
 [7]: https://jupyterlab.readthedocs.io/en/stable/
