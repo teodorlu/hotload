@@ -1,4 +1,7 @@
-# Installing the version under development
+# Developing Hotload
 
-Here, you'll find scripts to install the version you're working on live (with a
-symlink) or atomically (with a copy).
+This folder contains some affordances for developing hotload.
+
+## Use your local hotload.py as a system-installed `hotload` executable
+
+See `./install-local-copy.sh` and `./install-symlink.sh`.
