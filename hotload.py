@@ -217,7 +217,7 @@ Example usage:
         print(USAGE)
         sys.exit(1)
 
-    init_module = re.sub(r"\.py", "", sys.argv[1])
+    init_module = re.sub(r"\.py", "", sys.argv[1]).replace("/", ".")
 
     os.environ["HOTLOAD_RUNNING"] = "HOTLOAD_RUNNING"
 
