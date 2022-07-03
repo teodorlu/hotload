@@ -82,7 +82,7 @@ def listfiles(folder, ext=""):
 
 class Runnable(object):
     @abstractmethod
-    def run(self):
+    def run(self, **kwargs):
         pass
 
     pass
@@ -92,7 +92,7 @@ class PythonHandle(Runnable):
     def __init__(self, code):
         self.code = code
 
-    def run(self):
+    def run(self, **kwargs):
         self.code()
 
     pass
@@ -102,7 +102,7 @@ class Command(Runnable):
     def __init__(self, command):
         self.command = command
 
-    def run(self):
+    def run(self, **kwargs):
         os.system(self.command)
 
     pass
@@ -128,7 +128,7 @@ class ReloadedPythonModule(Runnable):
     def post_reload_hook(self, _):
         pass
 
-    def run(self):
+    def run(self, **kwargs):
         self.pre_reload_hook(self.module)
         _reload_module(self.module)
         self.post_reload_hook(self.module)
@@ -147,14 +147,15 @@ class ReloadedPythonModule(Runnable):
 
 
 class ClearTerminal(Runnable):
-    def run(self):
+    def run(self, **kwargs):
         os.system("cls" if os.name == "nt" else "clear")
 
 class ReloadModules(Runnable):
     def __init__(self, module):
         self.main_module = module
-    def run(self, modules):
-        for module in modules:
+
+    def run(self, changed_modules, **kwargs):
+        for module in changed_modules:
             if module != self.main_module:
                 _reload_module(module)
 
@@ -185,10 +186,7 @@ def hotload(watch, steps, waittime_ms=1.0 / 144):
             try:
                 for step in steps:
                     try:
-                        if is_module_reloader(step):
-                            step.run(changed_modules)
-                        else:
-                            step.run()
+                        step.run(changed_modules=changed_modules)
                     except KeyboardInterrupt:
                         raise
                     except:
