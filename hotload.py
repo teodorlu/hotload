@@ -46,6 +46,21 @@ def _file_changed(f):
 def _all_file_changes(filepaths):
     return {path: _file_changed(path) for path in filepaths}
 
+def _changed_modules(new_changed, last_changed):
+    list = []
+    if last_changed is None:
+        return list
+    modules = {}
+    for module in sys.modules.copy().values():
+        file = getattr(module, '__file__', None)
+        if file is not None:
+            modules[file] = module
+    for path in new_changed:
+        if new_changed[path] != last_changed[path]:
+            module = modules.get(path, None)
+            if module is not None:
+                list.append(module)
+    return list
 
 def listfiles(folder, ext=""):
     fs = list()
@@ -135,6 +150,13 @@ class ClearTerminal(Runnable):
     def run(self):
         os.system("cls" if os.name == "nt" else "clear")
 
+class ReloadModules(Runnable):
+    def __init__(self, module):
+        self.main_module = module
+    def run(self, modules):
+        for module in modules:
+            if module != self.main_module:
+                _reload_module(module)
 
 def hotload(watch, steps, waittime_ms=1.0 / 144):
     """Hotload that code!"""
@@ -148,6 +170,9 @@ def hotload(watch, steps, waittime_ms=1.0 / 144):
     # Take note of when files were last changed before we start reloading
     last_changed = None
 
+    is_module_reloader = lambda step: type(step).__name__ == "ReloadModules"
+    do_reload_modules = bool(list(filter(is_module_reloader, steps)))
+
     # Begin the loop! Each Runner is responsible for handling its own exceptions.
     while True:
         new_changed = _all_file_changes(watchfiles)
@@ -155,11 +180,15 @@ def hotload(watch, steps, waittime_ms=1.0 / 144):
             time.sleep(waittime_ms)
         else:
             reload_begin_ms = time.time() * 1000
+            changed_modules = _changed_modules(new_changed, last_changed) if do_reload_modules else []
             last_changed = new_changed
             try:
                 for step in steps:
                     try:
-                        step.run()
+                        if is_module_reloader(step):
+                            step.run(changed_modules)
+                        else:
+                            step.run()
                     except KeyboardInterrupt:
                         raise
                     except:
@@ -210,7 +239,7 @@ Example usage:
     print()
     print("  ls *py | hotload hello.py")
 
-    watchfiles = [f.strip() for f in sys.stdin.readlines()]
+    watchfiles = [os.path.normpath(os.path.join(os.getcwd(), f.strip())) for f in sys.stdin.readlines()]
 
     if not watchfiles:
         print("Error: no watch files specified.")
@@ -227,7 +256,7 @@ Example usage:
 
     conf = {
         "watch": [watchfiles],
-        "steps": [ClearTerminal(), reloaded_module],
+        "steps": [ClearTerminal(), ReloadModules(reloaded_module.module), reloaded_module],
     }
 
     hotload(**conf)
@@ -237,3 +266,4 @@ Example usage:
 
 if __name__ == "__main__":
     main()
+
