@@ -11,5 +11,5 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - run: sh .github/workflows/test.sh
+      - run: sh -x .github/workflows/test.sh
 
