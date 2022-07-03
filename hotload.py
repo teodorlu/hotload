@@ -170,7 +170,7 @@ def hotload(watch, steps, waittime_ms=1.0 / 144):
                 return
             reload_done_ms = time.time() * 1000
             if TIME_RELOADS:
-                print(f"Reloaded in {reload_done_ms - reload_begin_ms} ms")
+                print("Reloaded in {} ms".format(reload_done_ms - reload_begin_ms))
             pass
     pass
 
