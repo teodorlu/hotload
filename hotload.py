@@ -47,9 +47,9 @@ def _all_file_changes(filepaths):
     return {path: _file_changed(path) for path in filepaths}
 
 def _changed_modules(new_changed, last_changed):
-    list = []
+    changed_modules = []
     if last_changed is None:
-        return list
+        return changed_modules
     modules = {}
     for module in sys.modules.copy().values():
         file = getattr(module, '__file__', None)
@@ -59,8 +59,8 @@ def _changed_modules(new_changed, last_changed):
         if new_changed[path] != last_changed[path]:
             module = modules.get(path, None)
             if module is not None:
-                list.append(module)
-    return list
+                changed_modules.append(module)
+    return changed_modules
 
 def _feature_flag(envvar, cli_arg):
     if envvar in  os.environ and os.environ[envvar] == envvar:
