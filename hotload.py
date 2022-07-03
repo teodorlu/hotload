@@ -73,6 +73,9 @@ def _reload_recursive():
     """Feature flag - is recursive reloading enabled?"""
     return _feature_flag("HOTLOAD_RECURSIVE", "--recursive")
 
+def __no_clear():
+    return _feature_flag("HOTLOAD_NO_CLEAR", "--no-clear")
+
 def listfiles(folder, ext=""):
     fs = list()
     for root, dirs, files in os.walk(folder):
@@ -263,16 +266,20 @@ Example usage:
     if entrypoint:
         reloaded_module.post_reload_hook = lambda _: reloaded_module.function(entrypoint)()
 
+    steps = []
+
+    if not __no_clear():
+        steps.append(ClearTerminal())
+
     if _reload_recursive():
-        conf = {
-            "watch": [watchfiles],
-            "steps": [ClearTerminal(), ReloadModules(reloaded_module.module), reloaded_module],
-        }
-    else:
-        conf = {
-            "watch": [watchfiles],
-            "steps": [ClearTerminal(), reloaded_module],
-        }
+        steps.append(ReloadModules(reloaded_module.module))
+
+    steps.append(reloaded_module)
+
+    conf = {
+        "watch": [watchfiles],
+        "steps": steps
+    }
 
     hotload(**conf)
 
