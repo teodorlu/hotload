@@ -62,6 +62,17 @@ def _changed_modules(new_changed, last_changed):
                 list.append(module)
     return list
 
+def _feature_flag(envvar, cli_arg):
+    if os.environ[envvar] and os.environ[envvar] == envvar:
+        return True
+    if cli_arg in sys.argv:
+        return True
+    return False
+
+def _reload_recursive():
+    """Feature flag - is recursive reloading enabled?"""
+    return _feature_flag("HOTLOAD_RECURSIVE", "--recursive")
+
 def listfiles(folder, ext=""):
     fs = list()
     for root, dirs, files in os.walk(folder):
@@ -252,10 +263,16 @@ Example usage:
     if entrypoint:
         reloaded_module.post_reload_hook = lambda _: reloaded_module.function(entrypoint)()
 
-    conf = {
-        "watch": [watchfiles],
-        "steps": [ClearTerminal(), ReloadModules(reloaded_module.module), reloaded_module],
-    }
+    if _reload_recursive():
+        conf = {
+            "watch": [watchfiles],
+            "steps": [ClearTerminal(), ReloadModules(reloaded_module.module), reloaded_module],
+        }
+    else:
+        conf = {
+            "watch": [watchfiles],
+            "steps": [ClearTerminal(), reloaded_module],
+        }
 
     hotload(**conf)
 
