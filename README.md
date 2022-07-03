@@ -158,7 +158,7 @@ print(mymath.f(1,2))
 ```python
 # in mymath.py
 
-def f(x):
+def f(x,y):
     return x*x + y*y
 ```
 
