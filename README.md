@@ -62,7 +62,7 @@ refresh, and you may load multiple modules.
 
 Hotload is distributed as a single file
 
-1. Create `lib.py` and `load.py` in a new folder
+1. Create `lib.py` and `launch.py` in a new folder
 2. Copy [hotload.py][4] in there as well.
 
 Our task is to develop `lib.py`. We're going to do this by creating a really
@@ -77,7 +77,7 @@ y = 4
 print(x*x + y*y)
 ```
 
-To hotload `lib.py`, we're going to use `load.py` as a load script. This
+To hotload `lib.py`, we're going to use `launch.py` as a load script. This
 script sets up and runs `hotload`. We'll use this start:
 
 ```python
