@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import datetime
 import importlib
+import itertools
 import os
 import re
 import sys
@@ -40,7 +41,13 @@ def _file_changed(f):
     [1]: https://docs.python.org/3/library/stat.html#stat.ST_CTIME
 
     """
-    return os.stat(f).st_mtime
+    for attempt in itertools.count(start=1):
+        try:
+            return os.stat(f).st_mtime
+        except FileNotFoundError:
+            if attempt > 3:
+                raise
+            time.sleep(0.01 * attempt)
 
 
 def _all_file_changes(filepaths):
