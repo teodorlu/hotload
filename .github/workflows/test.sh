@@ -72,8 +72,34 @@ end() {
             trap 'trap - TERM; kill -s INT $$' TERM ;;
     esac
     trap - EXIT
-    kill -- $(ps -o pgid= -p $pid1 $pid2 $$ | sort | uniq \
-        | xargs -n 1 printf '%s%d ' - )
+    silent kill $(decendants)
+}
+
+decendants() {
+    ps -o pid -o ppid | piddecendants $$
+}
+piddecendants() {
+    # Prints given PID preceded by all its (great...)-grandchildren and children
+    awk -v root=$1 'NR > 1 {
+        parent[$1] = $2
+    } END {
+        for (p in parent) {
+            d = 0
+            c = p
+            while (c in parent) {
+                if (c == root)
+                    depth[d] = (depth[d] " " p)
+                else
+                    d++
+                c = parent[c]
+            }
+        }
+        count = 0
+        for (i in depth) count++
+        for (d = count - 1; d >= 0; d--) {
+            print depth[d]
+        }
+    }'
 }
 
 fail() {
