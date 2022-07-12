@@ -1,22 +1,83 @@
 #!/bin/bash
 set -e
 
-cat <<EOF >lib.py
-x = 3
-y = 4
-print("Result: {}".format(x*x + y*y))
+main(){
+    done_chan="${TMPDIR}chan$$"
+    mkfifo "$done_chan"
+    ( tests "$done_chan" || true ) & pid1=$!
+    ( sleep 4 && echo TIMEOUT > "$done_chan" || true ) & pid2=$!
+    read msg < "$done_chan"
+    silent nofail kill $pid1 $pid2
+    case "$msg" in
+        TIMEOUT)
+            fail "TIMEOUT" ;;
+        OK)
+            echo "Tests OK!"
+            exit ;;
+        *)
+            fail "Unexpected: $msg" ;;
+    esac
+}
+
+fail() {
+    echo >&2 "ERROR: $1"
+    exit 1
+}
+
+silent() {
+    "$@" >/dev/null 2>&1
+}
+
+nofail() {
+    "$@" || true
+}
+
+tests(){ done_chan="$1"
+
+    trap 'end' EXIT
+
+    end() {
+        [ -z "$pid" ] || nofail silent kill $pid
+        [ -e "$pipe" ] && rm "$pipe" || true
+    }
+
+    cat <<-EOF >lib.py
+	x = 3
+	y = 4
+	print("Result: {}".format(x*x + y*y))
 EOF
-touch -t 200711121015 lib.py
+    touch -t 200711121015 lib.py
 
-echo lib.py | python3 -u ./hotload.py lib.py > output &
-pid="$!"
+    pipe="${TMPDIR}hotload$$"; mkfifo "$pipe"
 
-sleep 0.1
-sed -i.bak "s/x = ./x = 4/" lib.py
-sleep 0.1
-kill "$pid"
+    echo lib.py | python -u hotload.py lib.py > "$pipe" & pid=$!
 
-strings output | grep -o -m1 'Successfully reloaded lib'
-strings output | grep -o -m1 'Result: 25$'
-strings output | grep -o -m1 'Result: 32$'
+    (
+    expect "Running hotload"
+    expect "Result: 25"
+    expect "Successfully reloaded lib"
+
+    sed -i.bak "s/x = ./x = 4/" lib.py
+
+    expect "Result: 32"
+    expect "Successfully reloaded lib"
+    ) < "$pipe"
+
+    echo OK > "$done_chan"
+}
+
+expect() {
+    while IFS= read -r line; do
+        case "$line" in
+            *$1*)
+                echo "Asserted: $1"
+                return 0
+                ;;
+        esac
+    done
+    echo >&2 "Failed assertion: $1"
+    return 1
+}
+
+main "$@"
 
