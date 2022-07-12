@@ -1,5 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 set -e
+trap 'end EXIT' EXIT
+trap 'end TERM' TERM
+trap 'end INT' INT
 
 main(){
     done_chan="${TMPDIR}chan$$"
@@ -7,7 +10,6 @@ main(){
     ( tests "$done_chan" || true ) & pid1=$!
     ( sleep 4 && echo TIMEOUT > "$done_chan" || true ) & pid2=$!
     read msg < "$done_chan"
-    nofail silent kill $pid1 $pid2
     case "$msg" in
         TIMEOUT)
             fail "TIMEOUT" ;;
@@ -19,8 +21,7 @@ main(){
     esac
 }
 
-tests()( done_chan="$1"
-    trap 'end' EXIT
+tests(){ done_chan="$1"
 
     cat <<-EOF >lib.py
 	x = 3
@@ -45,12 +46,7 @@ EOF
     ) < "$pipe"
 
     echo OK > "$done_chan"
-
-    end() {
-        [ -z "$pid" ] || nofail silent kill $pid
-        [ -e "$pipe" ] && rm "$pipe" || true
-    }
-)
+}
 
 expect() {
     while IFS= read -r line; do
@@ -63,6 +59,21 @@ expect() {
     done
     echo >&2 "Failed assertion: $1"
     return 1
+}
+
+end() {
+    case "$1" in
+        EXIT)
+            trap "exit $?" TERM ;;
+        TERM)
+            trap - TERM ;;
+        INT)
+            trap - INT
+            trap 'trap - TERM; kill -s INT $$' TERM ;;
+    esac
+    trap - EXIT
+    kill -- $(ps -o pgid= -p $pid1 $pid2 $$ | sort | uniq \
+        | xargs -n 1 printf '%s%d ' - )
 }
 
 fail() {
