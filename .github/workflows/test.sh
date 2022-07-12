@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 trap 'end EXIT' EXIT
 trap 'end TERM' TERM
@@ -22,6 +22,7 @@ main(){
 }
 
 tests(){ done_chan="$1"
+    trap '[ -z "$pid" ] || kill $pid; [ -e "$pipe" ] && rm "$pipe" || true' EXIT
 
     cat <<-EOF >lib.py
 	x = 3
@@ -72,6 +73,7 @@ end() {
             trap 'trap - TERM; kill -s INT $$' TERM ;;
     esac
     trap - EXIT
+    if [ -e "$done_chan" ]; then rm "$done_chan"; fi
     silent kill $(decendants)
 }
 
