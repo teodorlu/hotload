@@ -7,7 +7,7 @@ main(){
     ( tests "$done_chan" || true ) & pid1=$!
     ( sleep 4 && echo TIMEOUT > "$done_chan" || true ) & pid2=$!
     read msg < "$done_chan"
-    silent nofail kill $pid1 $pid2
+    nofail silent kill $pid1 $pid2
     case "$msg" in
         TIMEOUT)
             fail "TIMEOUT" ;;
@@ -19,27 +19,8 @@ main(){
     esac
 }
 
-fail() {
-    echo >&2 "ERROR: $1"
-    exit 1
-}
-
-silent() {
-    "$@" >/dev/null 2>&1
-}
-
-nofail() {
-    "$@" || true
-}
-
-tests(){ done_chan="$1"
-
+tests()( done_chan="$1"
     trap 'end' EXIT
-
-    end() {
-        [ -z "$pid" ] || nofail silent kill $pid
-        [ -e "$pipe" ] && rm "$pipe" || true
-    }
 
     cat <<-EOF >lib.py
 	x = 3
@@ -64,7 +45,12 @@ EOF
     ) < "$pipe"
 
     echo OK > "$done_chan"
-}
+
+    end() {
+        [ -z "$pid" ] || nofail silent kill $pid
+        [ -e "$pipe" ] && rm "$pipe" || true
+    }
+)
 
 expect() {
     while IFS= read -r line; do
@@ -78,6 +64,20 @@ expect() {
     echo >&2 "Failed assertion: $1"
     return 1
 }
+
+fail() {
+    echo >&2 "ERROR: $1"
+    exit 1
+}
+
+silent() {
+    "$@" >/dev/null 2>&1
+}
+
+nofail() {
+    "$@" || true
+}
+
 
 main "$@"
 
