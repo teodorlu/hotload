@@ -75,13 +75,13 @@ end() {
     esac
     trap - EXIT
     if [ -e "$done_chan" ]; then rm "$done_chan"; fi
-    silent kill $(decendants)
+    silent kill $(descendants)
 }
 
-decendants() {
-    ps -o pid -o ppid | piddecendants $PID
+descendants() {
+    ps -o pid -o ppid | piddescendants $PID
 }
-piddecendants() {
+piddescendants() {
     # Prints given PID preceded by all its (great...)-grandchildren and children
     awk -v root=$1 'NR > 1 {
         parent[$1] = $2
