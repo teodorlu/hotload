@@ -3,6 +3,7 @@ set -e
 trap 'end EXIT' EXIT
 trap 'end TERM' TERM
 trap 'end INT' INT
+PID=$$
 
 main(){
     done_chan="${TMPDIR}chan$$"
@@ -78,7 +79,7 @@ end() {
 }
 
 decendants() {
-    ps -o pid -o ppid | piddecendants $$
+    ps -o pid -o ppid | piddecendants $PID
 }
 piddecendants() {
     # Prints given PID preceded by all its (great...)-grandchildren and children
