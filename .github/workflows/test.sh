@@ -1,5 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
+trap 'end EXIT' EXIT
+trap 'end TERM' TERM
+trap 'end INT' INT
+PID=$$
 
 main(){
     done_chan="${TMPDIR}chan$$"
@@ -7,7 +11,6 @@ main(){
     ( tests "$done_chan" || true ) & pid1=$!
     ( sleep 4 && echo TIMEOUT > "$done_chan" || true ) & pid2=$!
     read msg < "$done_chan"
-    nofail silent kill $pid1 $pid2
     case "$msg" in
         TIMEOUT)
             fail "TIMEOUT" ;;
@@ -19,8 +22,8 @@ main(){
     esac
 }
 
-tests()( done_chan="$1"
-    trap 'end' EXIT
+tests(){ done_chan="$1"
+    trap '[ -z "$pid" ] || kill $pid; [ -e "$pipe" ] && rm "$pipe" || true' EXIT
 
     cat <<-EOF >lib.py
 	x = 3
@@ -45,12 +48,7 @@ EOF
     ) < "$pipe"
 
     echo OK > "$done_chan"
-
-    end() {
-        [ -z "$pid" ] || nofail silent kill $pid
-        [ -e "$pipe" ] && rm "$pipe" || true
-    }
-)
+}
 
 expect() {
     while IFS= read -r line; do
@@ -63,6 +61,48 @@ expect() {
     done
     echo >&2 "Failed assertion: $1"
     return 1
+}
+
+end() {
+    case "$1" in
+        EXIT)
+            trap "exit $?" TERM ;;
+        TERM)
+            trap - TERM ;;
+        INT)
+            trap - INT
+            trap 'trap - TERM; kill -s INT $$' TERM ;;
+    esac
+    trap - EXIT
+    if [ -e "$done_chan" ]; then rm "$done_chan"; fi
+    silent kill $(descendants)
+}
+
+descendants() {
+    ps -o pid -o ppid | piddescendants $PID
+}
+piddescendants() {
+    # Prints given PID preceded by all its (great...)-grandchildren and children
+    awk -v root=$1 'NR > 1 {
+        parent[$1] = $2
+    } END {
+        for (p in parent) {
+            d = 0
+            c = p
+            while (c in parent) {
+                if (c == root)
+                    depth[d] = (depth[d] " " p)
+                else
+                    d++
+                c = parent[c]
+            }
+        }
+        count = 0
+        for (i in depth) count++
+        for (d = count - 1; d >= 0; d--) {
+            print depth[d]
+        }
+    }'
 }
 
 fail() {
