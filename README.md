@@ -28,7 +28,7 @@ terminal, a single control+s in the file you're developing is enough.
 `hotload` is simple:
 
 - No dependencies other than Python 2/3.
-- Small: at ~200 lines, you can read it in a few minutes.
+- Small: at ~200 lines, you can read the whole source.
 
 ## Quick start with CLI (Linux / Mac)
 
