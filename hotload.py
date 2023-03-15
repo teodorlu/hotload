@@ -70,7 +70,7 @@ def _changed_modules(new_changed, last_changed):
     return changed_modules
 
 def _feature_flag(envvar, cli_arg):
-    if os.environ.get(envvar, None) == envvar:
+    if os.getenv(envvar) == envvar:
         return True
     if cli_arg in sys.argv:
         return True
