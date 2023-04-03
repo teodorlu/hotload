@@ -111,9 +111,18 @@ $ python launch.py
 
 ## Supported platforms
 
-`hotload` avoids external dependencies, and aims to be portable. Why support
-Python 2? Because it's when interacting with old, stale systems with poor
-documentation that hotloading really shines.
+Hotload aims to support:
+
+- Python 2.7.3 and later 2.7.x versions
+- Python 3.7, and later 3.x versions
+- Mac, Linux, Windows
+- [Abaqus] Python 2.7.x
+
+[Abaqus]: https://en.wikipedia.org/wiki/Abaqus
+
+We want to support Python 2.7 because hotloading shines when working with
+old, clunky systems. We can reload a single piece of the system to test our
+change.
 
 `hotload` has been tested on the following systems:
 
@@ -124,9 +133,7 @@ documentation that hotloading really shines.
 - Anaconda Python 2.7.15 on Windows 10
 - Abaqus Python 2.7.4 on Windows 10
 
-If any of these platforms break, please report the bug in an issue. If you're on
-a different platform where you think hotload should work, please create an
-issue.
+Please report a bug in an issue if hotload doesn't work on any supported platform.
 
 ## Advanced usage
 
